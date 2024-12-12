@@ -130,7 +130,29 @@ def _install_deps(deps: set[str]) -> None:
     # https://unix.stackexchange.com/questions/274727/how-to-force-pacman-to-answer-yes-to-all-questions
     # https://bugs.archlinux.org/task/48835
     _run("pacman", "--noconfirm", "--ask=4", "-Syu")
-    _run("pacman", "--noconfirm", "--ask=4", "--needed", "-S", *sorted(deps))
+
+    ignored = [
+        "python-setuptools",
+    ]
+
+    if deps:
+        _run("pacman", "--noconfirm", "--ask=4", "--needed", "-S", *sorted(deps))
+    else:
+        _say("No dependencies to install.")
+
+    # filtered_deps = {dep for dep in deps if not (dep.startswith("python"))}
+    # python_packages = {dep for dep in deps if dep.startswith("python-")}
+    
+    # if python_packages:
+    #     for package in sorted(python_packages):
+    #         package_name = package.replace("python-", "")
+    #         _say("Installing '" + package_name + "' package using pip")
+    #         _run("pip", "install", package_name)
+
+    # if filtered_deps:
+    #     _run("pacman", "--noconfirm", "--ask=4", "--needed", "-S", *sorted(filtered_deps))
+    # else:
+    #     _say("No dependencies to install.")
 
 
 def _sign_files(paths: set[str], key: str) -> None:
@@ -162,10 +184,20 @@ def _build(build_path: str, key: str, distcc_hosts: str, no_extract: bool) -> No
         if distcc_hosts:
             cmd += ["env", f"DISTCC_HOSTS={distcc_hosts}", "pump"]
             _say("... With DISTCC-PUMP")
-        cmd += ["makepkg"]
+
+        # makepkg_cmd = "source /pikvm-env/bin/activate && makepkg"
+        makepkg_cmd = "makepkg"
+
         if no_extract:
-            cmd += ["--noextract", "--force"]
+            makepkg_cmd += " --noextract --force"
             _say("... With NOEXTRACT")
+
+        cmd += ["sh", "-c", makepkg_cmd]
+
+        # if no_extract:
+        #     cmd += ["--noextract", "--force"]
+        #     _say("... With NOEXTRACT")
+
         _run(*cmd)
         if key:
             _say("Signing package(s) ...")

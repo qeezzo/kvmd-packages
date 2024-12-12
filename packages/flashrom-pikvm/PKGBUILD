@@ -7,7 +7,7 @@ pkgrel=2
 pkgdesc="A utility for identifying, reading, writing, verifying and erasing flash chips"
 url="https://github.com/flashrom/flashrom"
 license=(GPL)
-arch=(i686 x86_64 armv6h armv7h)
+arch=(any)
 depends=(
 	libusb
 	libftdi

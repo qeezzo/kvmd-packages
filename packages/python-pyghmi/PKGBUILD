@@ -11,6 +11,7 @@ depends=(
 	python-cryptography
 	python-dateutil
 	python-six
+	python-setuptools
 )
 makedepends=(python-distribute)
 source=(${pkgname}::"git+https://opendev.org/x/pyghmi#commit=${pkgver}")
@@ -20,5 +21,7 @@ md5sums=(SKIP)
 package() {
 	cd "$srcdir/$pkgname"
 	./makesetup
+	sed -i "s/import setuptools/from setuptools import setup/" setup.py
+	sed -i "s/setuptools.setup/setup/" setup.py
 	python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
 }

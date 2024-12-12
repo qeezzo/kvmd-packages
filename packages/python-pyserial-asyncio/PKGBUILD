@@ -7,7 +7,6 @@ license=(MIT)
 arch=(any)
 depends=(
 	"python>=3.11"
-	"python<3.12"
 	python-pyserial
 )
 makedepends=(python-setuptools)

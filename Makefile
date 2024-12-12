@@ -1,10 +1,11 @@
 -include config.mk
 
 export PROJECT ?= pikvm-packages
-export BOARD ?= rpi2
+export BOARD ?= rpi4
 export STAGES ?= __init__ buildenv
 export HOSTNAME = buildenv
-export ARCH_DIST_REPO_URL ?= http://mirror.archlinuxarm.org/
+# export ARCH_DIST_REPO_URL ?= http://mirror.archlinuxarm.org/
+export ARCH_DIST_REPO_URL ?= https://alaa.ad24.cz/repos/2023/12/31/
 export DOCKER ?= docker
 export DISTCC_HOSTS ?=
 export DISTCC_J ?=
@@ -19,7 +20,7 @@ export NOINT ?=
 
 # =====
 _TARGET_REPO_NAME = pikvm
-_TARGET_REPO_KEY = 912C773ABBD1B584
+_TARGET_REPO_KEY = 095CEA000615D862
 
 _ALARM_UID := $(shell id -u)
 _ALARM_GID := $(shell id -g)
@@ -139,7 +140,7 @@ _run: $(_BUILD_DIR) $(_TARGET_REPO_DIR)
 
 
 $(_BUILDENV_DIR):
-	git clone --depth=1 https://github.com/pikvm/pi-builder $(_BUILDENV_DIR)
+	git clone --depth=1 https://github.com/qeezzo/kvmd-pi-builder $(_BUILDENV_DIR)
 
 
 $(_BUILD_DIR):
@@ -154,6 +155,9 @@ $(_BASE_REPOS_DIR)/rpi2:
 	ln -sf rpi2 $(_BASE_REPOS_DIR)/rpi3-arm
 	ln -sf rpi2 $(_BASE_REPOS_DIR)/rpi4
 	ln -sf rpi2 $(_BASE_REPOS_DIR)/rpi4-arm
+
+$(_TARGET_REPO_DIR):
+	mkdir -p $(_TARGET_REPO_DIR)
 
 
 # =====

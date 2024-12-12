@@ -5,7 +5,7 @@ pkgrel=1
 pkgdesc="An open source, general purpose, WebRTC server (PiKVM build)"
 url='https://janus.conf.meetecho.com'
 license=(GPL3)
-arch=(i686 x86_64 armv6h armv7h)
+arch=(any)
 depends=(
 	glib2
 	jansson
