@@ -131,23 +131,34 @@ def _install_deps(deps: set[str]) -> None:
     # https://bugs.archlinux.org/task/48835
     _run("pacman", "--noconfirm", "--ask=4", "-Syu")
 
-    ignored = [
-        "python-setuptools",
-    ]
-
     if deps:
         _run("pacman", "--noconfirm", "--ask=4", "--needed", "-S", *sorted(deps))
     else:
         _say("No dependencies to install.")
 
-    # filtered_deps = {dep for dep in deps if not (dep.startswith("python"))}
-    # python_packages = {dep for dep in deps if dep.startswith("python-")}
+    # pip_ignored = {
+    #     "python-setuptools",
+    #     "python-dbus",
+    #     "python-ldap",
+    #     "python-periphery",
+    #     "python-pyghmi",
+    #     "python-yaml",
+    #     "python-pillow",
+    # }
+
+    # filtered_deps = set()
+    # python_packages = set()
+    # for dep in deps:
+    #     if dep in pip_ignored or not dep.startswith("python"):
+    #         filtered_deps.add(dep)
+    #     elif dep.startswith("python-"):
+    #         python_packages.add(dep)
     
     # if python_packages:
     #     for package in sorted(python_packages):
     #         package_name = package.replace("python-", "")
     #         _say("Installing '" + package_name + "' package using pip")
-    #         _run("pip", "install", package_name)
+    #         _run("/pikvm-env/bin/pip", "install", package_name)
 
     # if filtered_deps:
     #     _run("pacman", "--noconfirm", "--ask=4", "--needed", "-S", *sorted(filtered_deps))
@@ -185,8 +196,8 @@ def _build(build_path: str, key: str, distcc_hosts: str, no_extract: bool) -> No
             cmd += ["env", f"DISTCC_HOSTS={distcc_hosts}", "pump"]
             _say("... With DISTCC-PUMP")
 
-        # makepkg_cmd = "source /pikvm-env/bin/activate && makepkg"
-        makepkg_cmd = "makepkg"
+        makepkg_cmd = "source /pikvm-env/bin/activate && makepkg"
+        # makepkg_cmd = "makepkg"
 
         if no_extract:
             makepkg_cmd += " --noextract --force"

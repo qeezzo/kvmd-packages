@@ -49,12 +49,12 @@ depends=(
 	"python>=3.11"
 	"python<3.12"
 	python-yaml
-	python-aiohttp
+	# python-aiohttp - installed in Dockerfile.part
 	python-aiofiles
 	python-async-lru
 	python-passlib
 	python-pyotp
-	python-qrcode
+	# python-qrcode - installed in Dockerfile.part
 	python-periphery
 	python-pyserial
 	python-pyserial-asyncio
@@ -66,15 +66,15 @@ depends=(
 	python-dbus
 	python-dbus-next
 	python-pygments
-	python-pyghmi
+	# python-pyghmi - installed locally
 	python-pam
 	python-pillow
 	python-xlib
 	libxkbcommon
 	python-hidapi
 	python-six
-	python-pyrad
-	python-ldap
+	# python-pyrad - installed locally
+	# python-ldap - installed in Dockerfile.part
 	python-zstandard
 	libgpiod
 	freetype2
@@ -87,7 +87,7 @@ depends=(
 	dnsmasq
 	ipmitool
 	"janus-gateway-pikvm>=0.11.2-7"
-	certbot
+	# certbot - installed in Dockerfile.part
 	platform-io-access
 	raspberrypi-utils
 	"ustreamer>=5.32"

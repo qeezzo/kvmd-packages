@@ -1,0 +1,40 @@
+pkgname=webcam-streaming
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="Webcam retranslation using WebRTC"
+url="https://github.com/qeezzo/webcam-streaming.git"
+license=(GPL)
+arch=(any)
+depends=(
+	"python>3.11"
+	"python<=3.12"
+	# cairo - installed in Dockerfile.part
+	# gobject-introspection - installed in Dockerfile.part
+	gstreamer
+	gst-plugins-good
+	gst-plugins-bad
+	gst-plugins-base
+	# meson - installed in Dockerfile.part
+)
+source=(
+	"git+https://github.com/qeezzo/webcam-streaming.git"
+	webcam-streaming.service
+	launch.sh
+)
+md5sums=(SKIP SKIP SKIP)
+
+package() {
+	python -m venv env --clear
+    source env/bin/activate
+
+	rm -rf ./tmp
+	mkdir ./tmp
+    TMPDIR=./tmp pip install -r webcam-streaming/requirements.txt
+	rm -rf ./tmp
+
+	DESTDIR="$pkgdir"
+    install -D -m644 "$srcdir/webcam-streaming.service" "$pkgdir/usr/lib/systemd/system/webcam-streaming.service"
+	install -D -m555 "$srcdir/webcam-streaming/server/server.py" "$pkgdir/usr/lib/webcam-streaming/server.py"
+	cp -r "$srcdir/env" "$pkgdir/usr/lib/webcam-streaming/env"
+	install -D -m555 "$srcdir/launch.sh" "$pkgdir/usr/lib/webcam-streaming/launch.sh"
+}

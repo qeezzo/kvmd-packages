@@ -4,8 +4,9 @@ export PROJECT ?= pikvm-packages
 export BOARD ?= rpi4
 export STAGES ?= __init__ buildenv
 export HOSTNAME = buildenv
-# export ARCH_DIST_REPO_URL ?= http://mirror.archlinuxarm.org/
-export ARCH_DIST_REPO_URL ?= https://alaa.ad24.cz/repos/2023/12/31/
+export ARCH_DIST_REPO_URL ?= http://tardis.tiny-vps.com/aarm/repos/2023/12/31/
+# export ARCH_DIST_REPO_URL ?= https://alaa.ad24.cz/repos/2023/12/31/
+# export ARCH_DIST_REPO_URL ?= http://nj.us.mirror.archlinuxarm.org
 export DOCKER ?= docker
 export DISTCC_HOSTS ?=
 export DISTCC_J ?=
@@ -20,7 +21,7 @@ export NOINT ?=
 
 # =====
 _TARGET_REPO_NAME = pikvm
-_TARGET_REPO_KEY = 095CEA000615D862
+_TARGET_REPO_KEY = 90388EDE37F03975FFF3122E222874377D5C88D1
 
 _ALARM_UID := $(shell id -u)
 _ALARM_GID := $(shell id -g)

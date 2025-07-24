@@ -20,9 +20,7 @@ RUN pacman --noconfirm --ask=4 -Syy
 RUN pacman --needed --noconfirm --ask=4 -S \
 		glibc \
 		openssl \
-		openssl-1.0 \
 		openssl-1.1
-# RUN pacman --needed --noconfirm --ask=4 -S
 RUN pacman-db-upgrade
 RUN pacman-key --init
 RUN pacman --needed --noconfirm -S \
@@ -43,10 +41,9 @@ RUN pacman --needed --noconfirm -S \
 		distcc \
 		jq \
 		git
-RUN (pacman --noconfirm -Sc || true)
 
 # RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python/python-3.11.8-1-aarch64.pkg.tar.xz
-# 
+
 # RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-setuptools/python-setuptools-1:68.2.2-1-any.pkg.tar.xz
 # RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-packaging/python-packaging-23.2-1-any.pkg.tar.xz
 # RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-more-itertools/python-more-itertools-9.1.1-4-any.pkg.tar.xz
@@ -54,11 +51,28 @@ RUN (pacman --noconfirm -Sc || true)
 # RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-ordered-set/python-ordered-set-4.1.0-4-any.pkg.tar.xz
 # RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-jaraco/python-jaraco-2022.2.21-2-any.pkg.tar.xz
 
-# RUN python3.11 -m venv pikvm-env
-# RUN echo "source /pikvm-env/bin/activate" > /root/.bashrc
-# RUN pip install setuptools packaging more-itertools
+# RUN pyenv install 3.11.2 \
+# 	&& pyenv global 3.11.2
 
-# RUN sed -i -e "s/^#IgnorePkg\s*=/IgnorePkg = python*/" /etc/pacman.conf
+RUN pacman --noconfirm --needed -S \
+	python \
+	python-pip \
+	python-ldap \
+	gobject-introspection \
+	cairo
+RUN pacman -U --noconfirm https://archive.archlinux.org/packages/c/certbot/certbot-2.7.4-1-any.pkg.tar.zst	
+RUN (pacman --noconfirm -Sc || true)
+
+RUN python -m venv pikvm-env
+RUN echo "source /pikvm-env/bin/activate" > /root/.bashrc
+RUN /pikvm-env/bin/pip install \
+	setuptools \
+	packaging \
+	more-itertools \
+	qrcode \
+	aiohttp
+
+RUN sed -i -e "s/^#IgnorePkg\s*=/IgnorePkg = python*/" /etc/pacman.conf
 
 ARG TARGET_REPO_NAME
 ENV TARGET_REPO_NAME $TARGET_REPO_NAME
@@ -66,14 +80,16 @@ RUN echo $TARGET_REPO_NAME
 
 ARG TARGET_REPO_KEY
 ENV TARGET_REPO_KEY $TARGET_REPO_KEY
-RUN ( \
-		pacman-key --keyserver hkps://keyserver.ubuntu.com:443 -r $TARGET_REPO_KEY \
-		|| pacman-key --keyserver hkps://keys.gnupg.net:443 -r $TARGET_REPO_KEY \
-		|| pacman-key --keyserver hkps://pgp.mit.edu:443 -r $TARGET_REPO_KEY \
-	) \
-	&& pacman-key --lsign-key $TARGET_REPO_KEY
-# RUN pacman-key --add /home/alarm/.gnupg/public.key
-# RUN pacman-key --lsign-key $TARGET_REPO_KEY
+# fetching public key from a server. Commented out because we're using a local key
+# RUN ( \
+# 		pacman-key --keyserver hkps://keyserver.ubuntu.com:443 -r $TARGET_REPO_KEY \
+# 		|| pacman-key --keyserver hkps://keys.gnupg.net:443 -r $TARGET_REPO_KEY \
+# 		|| pacman-key --keyserver hkps://pgp.mit.edu:443 -r $TARGET_REPO_KEY \
+# 	) \
+# 	&& pacman-key --lsign-key $TARGET_REPO_KEY
+COPY /stages/buildenv/public.key /home/alarm/.gnupg/public.key
+RUN pacman-key --add /home/alarm/.gnupg/public.key
+RUN pacman-key --lsign-key $TARGET_REPO_KEY
 
 ARG ALARM_UID
 ENV ALARM_UID $ALARM_UID

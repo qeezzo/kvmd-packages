@@ -1,1 +1,9 @@
+janus-gateway-pikvm
+python-pyserial-asyncio
+python-spidev
+python-pyrad
+python-pyghmi
+raspberrypi-io-access
+ustreamer
 kvmd
+webcam-streaming
