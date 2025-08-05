@@ -15,7 +15,6 @@ RUN echo "Server = $ARCH_DIST_REPO_URL/\$arch/\$repo" > /etc/pacman.d/mirrorlist
 	&& pacman-key --init \
 	&& pacman-key --populate archlinuxarm
 
-
 RUN pacman --noconfirm --ask=4 -Syy
 RUN pacman --needed --noconfirm --ask=4 -S \
 		glibc \
@@ -42,35 +41,14 @@ RUN pacman --needed --noconfirm -S \
 		jq \
 		git
 
-# RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python/python-3.11.8-1-aarch64.pkg.tar.xz
-
-# RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-setuptools/python-setuptools-1:68.2.2-1-any.pkg.tar.xz
-# RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-packaging/python-packaging-23.2-1-any.pkg.tar.xz
-# RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-more-itertools/python-more-itertools-9.1.1-4-any.pkg.tar.xz
-# RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-pyserial/python-pyserial-3.5-5-any.pkg.tar.xz
-# RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-ordered-set/python-ordered-set-4.1.0-4-any.pkg.tar.xz
-# RUN pacman -U --noconfirm https://alaa.ad24.cz/packages/p/python-jaraco/python-jaraco-2022.2.21-2-any.pkg.tar.xz
-
-# RUN pyenv install 3.11.2 \
-# 	&& pyenv global 3.11.2
-
 RUN pacman --noconfirm --needed -S \
 	python \
 	python-pip \
-	python-ldap \
 	gobject-introspection \
-	cairo
+	cairo \
+	python-ldap python-setuptools python-packaging python-more-itertools python-qrcode python-aiohttp
 RUN pacman -U --noconfirm https://archive.archlinux.org/packages/c/certbot/certbot-2.7.4-1-any.pkg.tar.zst	
 RUN (pacman --noconfirm -Sc || true)
-
-RUN python -m venv pikvm-env
-RUN echo "source /pikvm-env/bin/activate" > /root/.bashrc
-RUN /pikvm-env/bin/pip install \
-	setuptools \
-	packaging \
-	more-itertools \
-	qrcode \
-	aiohttp
 
 RUN sed -i -e "s/^#IgnorePkg\s*=/IgnorePkg = python*/" /etc/pacman.conf
 

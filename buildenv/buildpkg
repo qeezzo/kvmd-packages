@@ -196,8 +196,8 @@ def _build(build_path: str, key: str, distcc_hosts: str, no_extract: bool) -> No
             cmd += ["env", f"DISTCC_HOSTS={distcc_hosts}", "pump"]
             _say("... With DISTCC-PUMP")
 
-        makepkg_cmd = "source /pikvm-env/bin/activate && makepkg"
-        # makepkg_cmd = "makepkg"
+        # makepkg_cmd = "source /pikvm-env/bin/activate && makepkg"
+        makepkg_cmd = "makepkg"
 
         if no_extract:
             makepkg_cmd += " --noextract --force"
