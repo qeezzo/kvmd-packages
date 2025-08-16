@@ -12,3 +12,9 @@ gpg --full-generate-key
 gpg --list-keys
 gpg --armor --export YOUR_KEY > buildenv/public.key
 ```
+
+```bash
+rm repos/rpi4/latest/kvmd
+make build
+scp repos/rpi4/kvmd-3.291-1-any.pkg.tar.xz spyder@raspberrypi:/home/spyder
+```
